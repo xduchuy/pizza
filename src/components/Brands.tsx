@@ -11,17 +11,7 @@ const BRANDS = [
     image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800",
     signatureDish: "ExtravaganZZa",
     color: "from-[#006491] to-[#E31837]",
-    brandColor: "#006491",
-    accentColor: "#E31837",
-    logoNode: (
-      <div className="flex flex-col items-center gap-0 leading-none">
-        <div className="w-24 h-24 rounded-full flex items-center justify-center shadow-2xl" style={{ background: 'linear-gradient(135deg,#006491,#E31837)' }}>
-          <span className="text-white font-black text-4xl" style={{ fontFamily: 'serif' }}>D</span>
-        </div>
-        <span className="text-white font-bold text-xl mt-3" style={{ fontFamily: 'serif', letterSpacing: '0.05em' }}>domino's</span>
-      </div>
-    ),
-    badgeLetter: "D",
+    logo: "https://cdn.worldvectorlogo.com/logos/domino-s-pizza-2.svg"
   },
   {
     name: "Pizza Hut",
@@ -30,39 +20,18 @@ const BRANDS = [
     description: "The Original Stuffed Crust changed pizza forever. A ring of melted cheese baked directly into the crust.",
     image: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=800",
     signatureDish: "Original Stuffed Crust",
-    color: "from-[#EE3124] to-[#8B0000]",
-    brandColor: "#EE3124",
-    accentColor: "#8B0000",
-    logoNode: (
-      <div className="flex flex-col items-center gap-0 leading-none">
-        {/* Circular red Pizza Hut logo */}
-        <div className="w-28 h-28 rounded-full flex flex-col items-center justify-center shadow-2xl" style={{ background: '#EE3124', border: '3px solid rgba(255,255,255,0.2)' }}>
-          <span className="text-white font-black leading-none" style={{ fontFamily: 'serif', fontStyle: 'italic', fontSize: '1.5rem' }}>Pizza</span>
-          <span className="text-white font-black leading-none" style={{ fontFamily: 'serif', fontStyle: 'italic', fontSize: '1.6rem' }}>Hut</span>
-        </div>
-      </div>
-    ),
-    badgeLetter: "H",
+    color: "from-[#EE3124] to-[#000000]",
+    logo: "https://cdn.worldvectorlogo.com/logos/pizza-hut-3.svg"
   },
   {
-    name: "The Pizza Company",
-    tagline: "Vietnam's Favourite",
-    established: 2001,
-    description: "Pizza Di Sản — The legendary signature crust stuffed with sausages, topped with fresh shrimp and vegetables. A true Vietnamese icon.",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800",
-    signatureDish: "Pizza Di Sản",
-    color: "from-[#1A5C1A] to-[#E8222A]",
-    brandColor: "#1A5C1A",
-    accentColor: "#E8222A",
-    logoNode: (
-      <div className="flex flex-col items-center gap-0 leading-none">
-        <div className="w-24 h-24 rounded-full flex flex-col items-center justify-center shadow-2xl" style={{ background: 'linear-gradient(135deg,#1A5C1A,#E8222A)', border: '3px solid rgba(255,255,255,0.2)' }}>
-          <span className="text-white font-black text-xs uppercase tracking-widest text-center leading-tight px-1" style={{ fontFamily: 'sans-serif' }}>THE\nPIZZA</span>
-        </div>
-        <span className="text-white font-black text-base mt-3 tracking-widest uppercase" style={{ fontFamily: 'sans-serif' }}>THE PIZZA COMPANY</span>
-      </div>
-    ),
-    badgeLetter: "T",
+    name: "Papa John's",
+    tagline: "Better Ingredients",
+    established: 1984,
+    description: "The Works features premium pepperoni, sausage, peppers, and onions, paired flawlessly with their famous garlic dipping sauce.",
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800",
+    signatureDish: "The Works & Garlic Sauce",
+    color: "from-[#00684A] to-[#DF192A]",
+    logo: "https://cdn.worldvectorlogo.com/logos/papa-john-s-pizza.svg"
   }
 ]
 
@@ -168,14 +137,10 @@ function TiltCard({ brand, index }: { brand: any, index: number }) {
             style={{ transformStyle: "preserve-3d" }}
           >
             {/* Ambient Brand Gradient Background */}
-            <div 
-              className="absolute inset-0 opacity-30 z-0 pointer-events-none"
-              style={{ background: `radial-gradient(ellipse at center, ${brand.brandColor}40 0%, transparent 70%)` }}
-            />
+            <div className="absolute inset-0 opacity-20 bg-gradient-to-b from-transparent to-black z-0 pointer-events-none" />
             
-            {/* Brand Logo — custom per-brand node */}
-            <div style={{ transform: "translateZ(60px)" }} className="relative z-10 mb-8 flex flex-col items-center">
-              {brand.logoNode}
+            <div style={{ transform: "translateZ(60px)" }} className="relative z-10 w-48 h-48 mb-6 flex items-center justify-center">
+              <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain drop-shadow-2xl" />
             </div>
             
             <div style={{ transform: "translateZ(40px)" }} className="text-center z-10">
@@ -209,12 +174,12 @@ function TiltCard({ brand, index }: { brand: any, index: number }) {
               />
             </div>
 
-            {/* Top Brand Badge (Small) */}
+            {/* Top Floating Logo (Small) */}
             <div 
-              style={{ transform: "translateZ(80px)", background: `linear-gradient(135deg, ${brand.brandColor}, ${brand.accentColor})` }}
-              className="absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center z-30 shadow-2xl border border-white/20"
+              style={{ transform: "translateZ(80px)" }}
+              className="absolute top-6 right-6 w-12 h-12 bg-white/95 backdrop-blur-md rounded-xl flex items-center justify-center p-2 border border-white/20 z-30 shadow-2xl"
             >
-              <span className="text-white text-sm font-serif font-black">{brand.badgeLetter}</span>
+              <img src={brand.logo} alt={`${brand.name} logo`} className="w-full h-full object-contain" />
             </div>
 
             {/* Bottom Dish Info */}
