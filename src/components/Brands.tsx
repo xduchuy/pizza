@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
+import { useRef, useState } from 'react'
 import { ExternalLink } from 'lucide-react'
 
 const BRANDS = [
@@ -7,22 +7,31 @@ const BRANDS = [
     name: "Domino's",
     tagline: "The Delivery Pioneer",
     established: 1960,
-    description: "Changed the game with logistics and the 30-minute delivery guarantee. A tech company that sells pizza.",
-    image: "https://images.unsplash.com/photo-1541745537411-b8046ff6be66?q=80&w=800"
+    description: "Iconic for its speed, the ExtravaganZZa is loaded with meats, veggies, and extra cheese—a true classic.",
+    image: "https://images.unsplash.com/photo-1541745537411-b8046ff6be66?q=80&w=800",
+    signatureDish: "ExtravaganZZa",
+    color: "from-[#006491] to-[#E31837]",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg"
   },
   {
     name: "Pizza Hut",
     tagline: "The Sit-Down Classic",
     established: 1958,
-    description: "Defined the dine-in pizza experience for a generation with its iconic red roofs and stuffed crust innovation.",
-    image: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=800"
+    description: "The Original Stuffed Crust changed pizza forever. A ring of melted cheese baked directly into the crust.",
+    image: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=800",
+    signatureDish: "Original Stuffed Crust",
+    color: "from-[#EE3124] to-[#000000]",
+    logo: "https://upload.wikimedia.org/wikipedia/en/d/d2/Pizza_Hut_logo.svg"
   },
   {
     name: "Papa John's",
     tagline: "Better Ingredients",
     established: 1984,
-    description: "Built an empire on the promise of quality ingredients, garlic dipping sauce, and consistent flavor.",
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800"
+    description: "The Works features premium pepperoni, sausage, peppers, and onions, paired flawlessly with their famous garlic dipping sauce.",
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800",
+    signatureDish: "The Works & Garlic Sauce",
+    color: "from-[#00684A] to-[#DF192A]",
+    logo: "https://upload.wikimedia.org/wikipedia/en/2/23/Papa_John%27s_Pizza_logo.svg"
   }
 ]
 
@@ -69,6 +78,8 @@ export default function Brands() {
 
 function TiltCard({ brand, index }: { brand: any, index: number }) {
   const ref = useRef<HTMLDivElement>(null)
+  const [showDish, setShowDish] = useState(false)
+  
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
@@ -105,48 +116,95 @@ function TiltCard({ brand, index }: { brand: any, index: number }) {
       transition={{ delay: index * 0.2, duration: 0.8 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={() => setShowDish(!showDish)}
       style={{
         rotateX,
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      className="group relative rounded-3xl overflow-hidden glass-panel h-[500px] border border-white/5 bg-background shadow-[0_0_30px_rgba(0,0,0,0.5)] cursor-pointer"
+      className="group relative rounded-3xl overflow-hidden glass-panel h-[500px] border border-white/5 bg-surface shadow-[0_0_30px_rgba(0,0,0,0.5)] cursor-pointer"
     >
-      {/* 3D Inner Content */}
-      <div 
-        style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
-        className="absolute inset-0 w-full h-full"
-      >
-        {/* Image Layer */}
-        <div className="absolute inset-x-0 top-0 h-[55%] overflow-hidden rounded-t-3xl">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10" />
-          <img 
-            src={brand.image} 
-            alt={brand.name} 
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 sepia-[0.2] contrast-125"
-          />
-        </div>
-
-        {/* Content Layer */}
-        <div 
-          style={{ transform: "translateZ(30px)" }}
-          className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-background via-background/95 to-transparent p-8 flex flex-col justify-end z-20"
-        >
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-xs uppercase tracking-widest text-oven font-bold">Est. {brand.established}</span>
-            <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-tomato group-hover:rotate-45">
-              <ExternalLink className="w-4 h-4 text-white" />
+      <AnimatePresence mode="wait">
+        {!showDish ? (
+          /* View 1: LOGO CENTRIC */
+          <motion.div 
+            key="front"
+            initial={{ opacity: 0, rotateY: -90 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            exit={{ opacity: 0, rotateY: 90 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 flex flex-col items-center justify-center p-8 bg-surface"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            {/* Ambient Brand Gradient Background */}
+            <div className="absolute inset-0 opacity-20 bg-gradient-to-b from-transparent to-black z-0 pointer-events-none" />
+            
+            <div style={{ transform: "translateZ(60px)" }} className="relative z-10 w-48 h-48 mb-6 flex items-center justify-center">
+              <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain drop-shadow-2xl" />
             </div>
-          </div>
-          
-          <h4 className="text-4xl font-serif mb-2 text-crust group-hover:text-tomato transition-colors duration-300">{brand.name}</h4>
-          <p className="text-cheese font-medium italic mb-4 drop-shadow-md">{brand.tagline}</p>
-          <p className="text-sm text-crust/70 leading-relaxed font-light">{brand.description}</p>
-          
-          {/* Decorative line */}
-          <div className="w-0 h-[2px] bg-gradient-to-r from-tomato to-oven mt-6 group-hover:w-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(179,49,31,0.5)]" />
-        </div>
-      </div>
+            
+            <div style={{ transform: "translateZ(40px)" }} className="text-center z-10">
+              <h4 className="text-2xl font-serif mb-1 text-crust">{brand.name}</h4>
+              <p className="text-sm font-light text-crust/60 uppercase tracking-widest mb-8">Est. {brand.established}</p>
+              
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-crust/80 text-sm group-hover:bg-white/10 transition-colors">
+                <span>Click to reveal dish</span>
+                <ExternalLink className="w-3 h-3 text-tomato" />
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          /* View 2: SIGNATURE DISH */
+          <motion.div 
+            key="back"
+            initial={{ opacity: 0, rotateY: 90 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            exit={{ opacity: 0, rotateY: -90 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            {/* Dish Image Background */}
+            <div className="absolute inset-x-0 top-0 h-full overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background z-10" />
+              <img 
+                src={brand.image} 
+                alt={brand.signatureDish} 
+                className="w-full h-full object-cover sepia-[0.1] contrast-125"
+              />
+            </div>
+
+            {/* Top Floating Logo (Small) */}
+            <div 
+              style={{ transform: "translateZ(80px)" }}
+              className="absolute top-6 right-6 w-12 h-12 bg-white/95 backdrop-blur-md rounded-xl flex items-center justify-center p-2 border border-white/20 z-30 shadow-2xl"
+            >
+              <img src={brand.logo} alt={`${brand.name} logo`} className="w-full h-full object-contain" />
+            </div>
+
+            {/* Bottom Dish Info */}
+            <div 
+              style={{ transform: "translateZ(50px)" }}
+              className="absolute inset-x-0 bottom-0 p-8 flex flex-col justify-end z-20 pointer-events-none"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs uppercase tracking-widest text-tomato font-bold">Signature Dish</span>
+              </div>
+              
+              <h4 className="text-3xl font-serif mb-3 text-crust drop-shadow-xl">{brand.signatureDish}</h4>
+              <p className="text-sm text-crust/90 leading-relaxed font-light drop-shadow-md mb-6">{brand.description}</p>
+              
+              <div className="flex items-center gap-2 text-xs text-crust/50">
+                <ExternalLink className="w-3 h-3 shrink-0" />
+                <span>Click to close</span>
+              </div>
+              
+              {/* Decorative line matching brand color */}
+              <div className={`w-1/2 h-[3px] bg-gradient-to-r ${brand.color} mt-6 shadow-lg`} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
