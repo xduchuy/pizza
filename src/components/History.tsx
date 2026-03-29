@@ -6,7 +6,7 @@ const TIMELINE_DATA = [
     year: 'Antiquity',
     title: 'Flatbreads & Origins',
     description: 'Ancient civilizations around the Mediterranean baked flatbreads on hot stones. The Greeks topped their bread (plakous) with herbs, onion, cheese and garlic, while the Persians baked flatbreads with cheese and dates atop their battle shields.',
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200'
+    image: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=1200'
   },
   {
     year: '18th Century',
