@@ -8,10 +8,10 @@ const BRANDS = [
     tagline: "The Delivery Pioneer",
     established: 1960,
     description: "Iconic for its speed, the ExtravaganZZa is loaded with meats, veggies, and extra cheese—a true classic.",
-    image: "https://images.unsplash.com/photo-1541745537411-b8046ff6be66?q=80&w=800",
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800",
     signatureDish: "ExtravaganZZa",
     color: "from-[#006491] to-[#E31837]",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/7/74/Dominos_pizza_logo.svg"
+    logo: "https://cdn.worldvectorlogo.com/logos/domino-s-pizza-2.svg"
   },
   {
     name: "Pizza Hut",
@@ -21,7 +21,7 @@ const BRANDS = [
     image: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=800",
     signatureDish: "Original Stuffed Crust",
     color: "from-[#EE3124] to-[#000000]",
-    logo: "https://upload.wikimedia.org/wikipedia/en/d/d2/Pizza_Hut_logo.svg"
+    logo: "https://cdn.worldvectorlogo.com/logos/pizza-hut-3.svg"
   },
   {
     name: "Papa John's",
@@ -31,7 +31,7 @@ const BRANDS = [
     image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800",
     signatureDish: "The Works & Garlic Sauce",
     color: "from-[#00684A] to-[#DF192A]",
-    logo: "https://upload.wikimedia.org/wikipedia/en/2/23/Papa_John%27s_Pizza_logo.svg"
+    logo: "https://cdn.worldvectorlogo.com/logos/papa-john-s-pizza.svg"
   }
 ]
 
