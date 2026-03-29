@@ -28,6 +28,14 @@
   }
 }
 
+/* Hide Google Translate completely */
+#google_translate_element { display: none !important; }
+.goog-te-banner-frame { display: none !important; }
+body { top: 0px !important; }
+.goog-tooltip { display: none !important; }
+.goog-tooltip:hover { display: none !important; }
+.goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+
 @layer utilities {
   .text-glow {
     text-shadow: 0 0 20px rgba(179, 49, 31, 0.5); /* tomato glow */

@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useState } from 'react'
-import { Pizza, Menu, X } from 'lucide-react'
+import { Pizza, Menu, X, Globe } from 'lucide-react'
 
 const LINKS = [
   { name: 'History', href: '#history' },
@@ -15,6 +15,17 @@ export default function Navbar() {
   const { scrollY } = useScroll()
   const bgOpacity = useTransform(scrollY, [0, 100], [0, 0.9])
   const blur = useTransform(scrollY, [0, 100], [0, 8])
+
+  const [isVi, setIsVi] = useState(false);
+  const handleTranslate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+    if (select) {
+      select.value = isVi ? 'en' : 'vi';
+      select.dispatchEvent(new Event('change'));
+      setIsVi(!isVi);
+    }
+  };
 
   return (
     <motion.nav
@@ -41,18 +52,33 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
+          <button 
+            onClick={handleTranslate} 
+            className="flex items-center gap-2 px-4 py-2 bg-surface border border-white/10 rounded-full hover:bg-white/5 transition-colors text-tomato font-medium tracking-wide text-sm"
+          >
+            <Globe className="w-4 h-4" />
+            <span>{isVi ? 'EN' : 'VI'}</span>
+          </button>
           <button className="px-6 py-2 bg-tomato text-crust font-medium rounded-full hover:bg-tomato/90 transition-colors shadow-[0_0_15px_rgba(179,49,31,0.3)]">
             Order Now
           </button>
         </div>
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-crust"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile Toggle & Translate */}
+        <div className="md:hidden flex items-center gap-4">
+          <button 
+            onClick={handleTranslate}
+            className="text-tomato"
+          >
+            <Globe className="w-6 h-6" />
+          </button>
+          <button
+            className="text-crust"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
