@@ -22,7 +22,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {['History', 'Global Maps', 'Styles', 'Brands'].map(link => (
                 <li key={link}>
-                  <a href={`#${link.toLowerCase()}`} className="hover:text-tomato transition-colors text-sm font-light">
+                  <a href={`#${link.toLowerCase()}`} className="inline-block hover:text-tomato hover:translate-x-2 transition-all duration-300 text-sm font-light">
                     {link}
                   </a>
                 </li>
@@ -35,7 +35,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map(link => (
                 <li key={link}>
-                  <a href="#" className="hover:text-tomato transition-colors text-sm font-light">
+                  <a href="#" className="inline-block hover:text-tomato hover:translate-x-2 transition-all duration-300 text-sm font-light">
                     {link}
                   </a>
                 </li>

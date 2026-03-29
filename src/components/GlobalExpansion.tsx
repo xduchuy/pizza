@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Globe } from 'lucide-react'
+import { useState } from 'react'
 
 const STATS = [
   { value: "5B+", label: "Pizzas Sold Annually", delay: 0 },
@@ -97,30 +98,54 @@ export default function GlobalExpansion() {
                   />
                 </svg>
 
-                {/* Nodes */}
-                {[
-                  { top: '20%', left: '50%', name: 'Naples', color: 'bg-tomato', glow: 'shadow-[0_0_20px_#B3311F]' }, // Origin
-                  { top: '40%', left: '25%', name: 'New York', color: 'bg-oven', glow: 'shadow-[0_0_20px_#D96A1D]' },
-                  { top: '45%', left: '15%', name: 'Chicago', color: 'bg-cheese', glow: 'shadow-[0_0_20px_#F2C14E]' },
-                  { top: '60%', left: '75%', name: 'Tokyo', color: 'bg-crust', glow: 'shadow-[0_0_20px_#F7E7CE]' },
-                  { top: '65%', left: '85%', name: 'Sydney', color: 'bg-oven', glow: 'shadow-[0_0_20px_#D96A1D]' },
-                  { top: '55%', left: '45%', name: 'São Paulo', color: 'bg-tomato', glow: 'shadow-[0_0_20px_#B3311F]' },
-                ].map((node, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute group"
-                    style={{ top: node.top, left: node.left }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 1 + i * 0.2, type: 'spring' }}
-                  >
-                    <div className={`w-4 h-4 rounded-full ${node.color} ${node.glow} relative z-10 animate-pulse`} />
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-sm font-serif pointer-events-none">
-                      {node.name}
-                    </div>
-                  </motion.div>
-                ))}
+                {/* Nodes Dashboard */}
+                {(() => {
+                  const nodes = [
+                    { top: '20%', left: '50%', name: 'Naples', desc: 'The Birthplace of modern pizza.', color: 'bg-tomato', glow: 'shadow-[0_0_20px_#B3311F]' },
+                    { top: '40%', left: '25%', name: 'New York', desc: 'The iconic wide & foldable slice.', color: 'bg-oven', glow: 'shadow-[0_0_20px_#D96A1D]' },
+                    { top: '45%', left: '15%', name: 'Chicago', desc: 'Deep-dish pioneer and pie-like crusts.', color: 'bg-cheese', glow: 'shadow-[0_0_20px_#F2C14E]' },
+                    { top: '60%', left: '75%', name: 'Tokyo', desc: 'Premium ingredients like squid ink and mayo.', color: 'bg-crust', glow: 'shadow-[0_0_20px_#F7E7CE]' },
+                    { top: '65%', left: '85%', name: 'Sydney', desc: 'Barbecue chicken & unique local toppings.', color: 'bg-oven', glow: 'shadow-[0_0_20px_#D96A1D]' },
+                    { top: '55%', left: '45%', name: 'São Paulo', desc: 'World famous for creative rodízio pizza.', color: 'bg-tomato', glow: 'shadow-[0_0_20px_#B3311F]' },
+                  ]
+                  
+                  const [activeNode, setActiveNode] = useState<number | null>(null)
+
+                  return nodes.map((node, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute group z-20"
+                      style={{ top: node.top, left: node.left }}
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 1 + i * 0.2, type: 'spring' }}
+                      onMouseEnter={() => setActiveNode(i)}
+                      onMouseLeave={() => setActiveNode(null)}
+                    >
+                      <div className={`w-4 h-4 rounded-full ${node.color} ${node.glow} relative z-10 cursor-pointer hover:scale-150 transition-transform duration-300 ${activeNode === i ? 'animate-none' : 'animate-pulse'}`} />
+                      
+                      {/* Tooltip */}
+                      <AnimatePresence>
+                        {activeNode === i && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 5, scale: 0.9 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-surface/90 backdrop-blur-md border border-white/10 rounded-xl p-4 w-48 shadow-2xl z-50 pointer-events-none"
+                          >
+                            <h5 className="font-serif text-lg text-white mb-1 drop-shadow-md">{node.name}</h5>
+                            <p className="text-xs text-crust/80 font-light leading-snug">{node.desc}</p>
+                            
+                            {/* Pointing triangle */}
+                            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-surface/90 border-t border-l border-white/10 rotate-45 transform origin-center" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  ))
+                })()}
               </motion.div>
             </div>
           </div>

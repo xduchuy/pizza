@@ -99,6 +99,9 @@ function TimeLineItem({ item, index }: { item: any; index: number }) {
     offset: ['start 80%', 'center 50%']
   })
 
+  // Slower offset for image parallax to make the image appear to stick inside its container
+  const imageY = useTransform(scrollYProgress, [0, 1], ['-20%', '0%'])
+
   const opacity = useTransform(scrollYProgress, [0, 1], [0, 1])
   const y = useTransform(scrollYProgress, [0, 1], [100, 0])
   const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1])
@@ -124,17 +127,21 @@ function TimeLineItem({ item, index }: { item: any; index: number }) {
         </p>
       </motion.div>
 
-      {/* Image */}
+      {/* Image Container with Parallax inner image */}
       <motion.div 
         style={{ opacity, scale }}
         className={`w-[calc(100%-3.5rem)] self-end md:self-auto md:w-5/12 h-[300px] relative rounded-2xl overflow-hidden glass-panel group-hover:shadow-[0_0_40px_rgba(217,106,29,0.15)] transition-shadow duration-700 ${isEven ? 'md:order-2' : ''}`}
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-surface to-transparent z-10 opacity-70" />
-        <img 
+        <div className="absolute inset-0 bg-gradient-to-t from-surface to-transparent z-10 opacity-70 pointer-events-none" />
+        <motion.img 
+          style={{ y: imageY, height: '120%' }}
           src={item.image} 
           alt={item.title} 
-          className="w-full h-full object-cover sepia-[0.3] contrast-125 transition-transform duration-1000 group-hover:scale-110 group-hover:sepia-0"
+          className="absolute inset-0 w-full object-cover sepia-[0.3] contrast-125 transition-all duration-1000 group-hover:scale-105 group-hover:sepia-0"
         />
+        {/* Decorative corner accents */}
+        <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-tomato/50 m-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-20" />
+        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-tomato/50 m-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-20" />
       </motion.div>
     </div>
   )

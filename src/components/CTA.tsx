@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { UtensilsCrossed } from 'lucide-react'
 
-export default function CTA() {
+export default function CTA({ onOpenMenu }: { onOpenMenu?: () => void }) {
   const { scrollY } = useScroll()
   
   // Create an effect where the background zooms as you scroll down towards the CTA
@@ -32,35 +32,71 @@ export default function CTA() {
       {/* Content */}
       <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 max-w-3xl">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1, delayChildren: 0.3 }
+            }
+          }}
           className="flex flex-col items-center"
         >
-          <div className="w-16 h-16 rounded-full border border-tomato/30 flex items-center justify-center mb-8 bg-surface/30 backdrop-blur-md relative">
+          <motion.div 
+            variants={{ hidden: { opacity: 0, scale: 0 }, visible: { opacity: 1, scale: 1 } }}
+            className="w-16 h-16 rounded-full border border-tomato/30 flex items-center justify-center mb-8 bg-surface/30 backdrop-blur-md relative"
+          >
             <UtensilsCrossed className="w-6 h-6 text-tomato relative z-10" />
             {/* Subtle glow behind icon */}
             <div className="absolute inset-0 bg-tomato/20 blur-md rounded-full pointer-events-none" />
-          </div>
+          </motion.div>
 
-          <h2 className="text-5xl md:text-7xl font-serif font-bold text-crust leading-[1.1] mb-6 drop-shadow-2xl">
-            The Journey <span className="text-tomato italic">Continues</span>
+          <h2 className="text-5xl md:text-7xl font-serif font-bold text-crust leading-[1.1] mb-6 drop-shadow-2xl flex flex-wrap justify-center gap-3">
+            {["The", "Journey", "Continues"].map((word, i) => (
+              <motion.span 
+                key={i}
+                variants={{ hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ duration: 0.8, ease: [0.2, 0.65, 0.3, 0.9] }}
+                className={word === "Continues" ? "text-tomato italic" : ""}
+              >
+                {word}
+              </motion.span>
+            ))}
           </h2>
           
-          <p className="text-xl md:text-2xl text-crust/80 font-light max-w-2xl mb-12 leading-relaxed drop-shadow-lg">
+          <motion.p 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            transition={{ duration: 1 }}
+            className="text-xl md:text-2xl text-crust/80 font-light max-w-2xl mb-12 leading-relaxed drop-shadow-lg"
+          >
             Every slice tells a story of culture, passion, and fire. What will your next chapter be?
-          </p>
+          </motion.p>
           
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <button className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 bg-tomato text-white font-medium text-lg rounded-full overflow-hidden transition-transform hover:scale-105 hover:shadow-[0_0_40px_rgba(179,49,31,0.6)] w-full sm:w-auto">
+          <motion.div 
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+            transition={{ duration: 1, delay: 1 }}
+            className="flex flex-col sm:flex-row items-center gap-6"
+          >
+            <motion.button 
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onOpenMenu}
+              className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 bg-tomato text-white font-medium text-lg rounded-full overflow-hidden shadow-[0_0_20px_rgba(179,49,31,0.4)] hover:shadow-[0_0_40px_rgba(179,49,31,0.8)] w-full sm:w-auto transition-shadow"
+            >
               <span className="relative z-10 tracking-widest uppercase text-sm">Order Your Story</span>
               <div className="absolute inset-0 bg-gradient-to-r from-oven to-tomato opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </button>
-            <button className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 bg-transparent border border-crust/30 text-crust font-medium text-lg rounded-full overflow-hidden transition-all hover:bg-crust/5 hover:border-crust/50 w-full sm:w-auto">
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onOpenMenu}
+              className="group relative inline-flex items-center justify-center gap-3 px-10 py-5 bg-surface/50 backdrop-blur-md border border-crust/30 text-crust font-medium text-lg rounded-full overflow-hidden transition-all hover:bg-crust/5 hover:border-crust/80 w-full sm:w-auto"
+            >
               <span className="tracking-widest uppercase text-sm">Discover Our Menu</span>
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </motion.div>
       </div>
 

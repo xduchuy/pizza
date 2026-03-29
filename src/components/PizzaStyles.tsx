@@ -37,7 +37,7 @@ const PIZZA_STYLES = [
     name: "Roman al Taglio",
     region: "Rome, Italy",
     description: "Baked in rectangular pans and sold by weight. Light, airy, and crisp, featuring creative seasonal toppings.",
-    image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=800",
+    image: "https://images.unsplash.com/photo-1585238342024-78d387f4a707?q=80&w=800",
     features: [
       { icon: <Square className="w-4 h-4" />, text: "Rectangular Pan" }
     ],

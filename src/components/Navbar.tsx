@@ -10,7 +10,7 @@ const LINKS = [
   { name: 'Vietnam', href: '#vietnam' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ onOpenMenu }: { onOpenMenu?: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
   const { scrollY } = useScroll()
   const bgOpacity = useTransform(scrollY, [0, 100], [0, 0.9])
@@ -59,7 +59,10 @@ export default function Navbar() {
             <Globe className="w-4 h-4" />
             <span>{isVi ? 'EN' : 'VI'}</span>
           </button>
-          <button className="px-6 py-2 bg-tomato text-crust font-medium rounded-full hover:bg-tomato/90 transition-colors shadow-[0_0_15px_rgba(179,49,31,0.3)]">
+          <button 
+            onClick={onOpenMenu}
+            className="px-6 py-2 bg-tomato text-crust font-medium rounded-full hover:bg-tomato/90 transition-colors shadow-[0_0_15px_rgba(179,49,31,0.3)]"
+          >
             Order Now
           </button>
         </div>

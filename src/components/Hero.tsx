@@ -1,5 +1,6 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import { Flame } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 export default function Hero() {
   const { scrollY } = useScroll()
@@ -9,8 +10,29 @@ export default function Hero() {
   const textY = useTransform(scrollY, [0, 800], ['0%', '50%'])
   const opacity = useTransform(scrollY, [0, 400], [1, 0])
 
+  // Mouse tracking functionality for interactive glow
+  const ref = useRef<HTMLElement>(null)
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  
+  const springConfig = { damping: 25, stiffness: 200 }
+  const glowX = useSpring(mouseX, springConfig)
+  const glowY = useSpring(mouseY, springConfig)
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ref.current) return
+      const rect = ref.current.getBoundingClientRect()
+      mouseX.set(e.clientX - rect.left)
+      mouseY.set(e.clientY - rect.top)
+    }
+    
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [mouseX, mouseY])
+
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background">
+    <section ref={ref} className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background">
       {/* Cinematic Background Image */}
       <motion.div 
         style={{ y: bgY, scale: 1.1 }}
@@ -26,8 +48,14 @@ export default function Hero() {
           className="w-full h-full object-cover object-center filter brightness-50 contrast-125 sepia-0"
         />
         
-        {/* Glow Effects */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-oven/20 blur-[120px] rounded-full z-10 mix-blend-screen" />
+        {/* Static Central Glow Effects */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-oven/20 blur-[120px] rounded-full z-10 mix-blend-screen pointer-events-none" />
+        
+        {/* Dynamic Mouse Tracking Cursor Glow */}
+        <motion.div 
+          style={{ x: glowX, y: glowY, translateX: '-50%', translateY: '-50%' }}
+          className="absolute top-0 left-0 w-[400px] h-[400px] bg-tomato/30 blur-[100px] rounded-full z-10 mix-blend-screen pointer-events-none"
+        />
       </motion.div>
 
       {/* Floating Particles/Flour Dust Simulation */}

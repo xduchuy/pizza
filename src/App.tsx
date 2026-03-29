@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import History from './components/History'
@@ -8,8 +8,11 @@ import Brands from './components/Brands'
 import Vietnam from './components/Vietnam'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
+import MenuOverlay from './components/MenuOverlay'
 
 export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   // Smooth scroll configuration or any global event listeners can go here.
   useEffect(() => {
     // Ensuring window starts at top on reload
@@ -18,7 +21,9 @@ export default function App() {
 
   return (
     <div className="relative w-full overflow-hidden bg-background">
-      <Navbar />
+      <Navbar onOpenMenu={() => setIsMenuOpen(true)} />
+      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
       
       <main>
         <Hero />
@@ -27,7 +32,7 @@ export default function App() {
         <PizzaStyles />
         <Brands />
         <Vietnam />
-        <CTA />
+        <CTA onOpenMenu={() => setIsMenuOpen(true)} />
       </main>
 
       <Footer />

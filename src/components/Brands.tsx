@@ -1,6 +1,6 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import { useRef } from 'react'
-import { ChevronRight } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 
 const BRANDS = [
   {
@@ -59,44 +59,94 @@ export default function Brands() {
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {BRANDS.map((brand, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.2, duration: 0.8 }}
-              className="group relative rounded-3xl overflow-hidden glass-panel h-[500px] border border-white/5 bg-background shadow-[0_0_30px_rgba(0,0,0,0.5)]"
-            >
-              {/* Image Layer */}
-              <div className="absolute inset-x-0 top-0 h-1/2 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10" />
-                <img 
-                  src={brand.image} 
-                  alt={brand.name} 
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 sepia-[0.2] contrast-125"
-                />
-              </div>
-
-              {/* Content Layer */}
-              <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-background via-background to-transparent p-8 flex flex-col justify-end z-20">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs uppercase tracking-widest text-oven font-bold">Est. {brand.established}</span>
-                  <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-surface">
-                    <ChevronRight className="w-4 h-4 text-tomato" />
-                  </div>
-                </div>
-                
-                <h4 className="text-4xl font-serif mb-2 text-crust group-hover:text-tomato transition-colors">{brand.name}</h4>
-                <p className="text-cheese font-medium italic mb-4">{brand.tagline}</p>
-                <p className="text-sm text-crust/70 leading-relaxed font-light">{brand.description}</p>
-                
-                {/* Decorative line */}
-                <div className="w-0 h-[1px] bg-gradient-to-r from-tomato to-oven mt-6 group-hover:w-full transition-all duration-700 ease-out" />
-              </div>
-            </motion.div>
+            <TiltCard key={i} brand={brand} index={i} />
           ))}
         </motion.div>
       </div>
     </section>
+  )
+}
+
+function TiltCard({ brand, index }: { brand: any, index: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 })
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15 })
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"])
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+    const xPct = mouseX / width - 0.5
+    const yPct = mouseY / height - 0.5
+    x.set(xPct)
+    y.set(yPct)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.2, duration: 0.8 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      className="group relative rounded-3xl overflow-hidden glass-panel h-[500px] border border-white/5 bg-background shadow-[0_0_30px_rgba(0,0,0,0.5)] cursor-pointer"
+    >
+      {/* 3D Inner Content */}
+      <div 
+        style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
+        className="absolute inset-0 w-full h-full"
+      >
+        {/* Image Layer */}
+        <div className="absolute inset-x-0 top-0 h-[55%] overflow-hidden rounded-t-3xl">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10" />
+          <img 
+            src={brand.image} 
+            alt={brand.name} 
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 sepia-[0.2] contrast-125"
+          />
+        </div>
+
+        {/* Content Layer */}
+        <div 
+          style={{ transform: "translateZ(30px)" }}
+          className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-background via-background/95 to-transparent p-8 flex flex-col justify-end z-20"
+        >
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-xs uppercase tracking-widest text-oven font-bold">Est. {brand.established}</span>
+            <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-tomato group-hover:rotate-45">
+              <ExternalLink className="w-4 h-4 text-white" />
+            </div>
+          </div>
+          
+          <h4 className="text-4xl font-serif mb-2 text-crust group-hover:text-tomato transition-colors duration-300">{brand.name}</h4>
+          <p className="text-cheese font-medium italic mb-4 drop-shadow-md">{brand.tagline}</p>
+          <p className="text-sm text-crust/70 leading-relaxed font-light">{brand.description}</p>
+          
+          {/* Decorative line */}
+          <div className="w-0 h-[2px] bg-gradient-to-r from-tomato to-oven mt-6 group-hover:w-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(179,49,31,0.5)]" />
+        </div>
+      </div>
+    </motion.div>
   )
 }
